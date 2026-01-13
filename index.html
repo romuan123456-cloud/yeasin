@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Elite Folding Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html,body{
+  margin:0;height:100%;
+  background:#05070c;
+  font-family:"Segoe UI",monospace;
+}
+
+/* PANEL */
+#elitePanel{
+  position:fixed; top:80px; left:50%;
+  transform:translateX(-50%);
+  width:260px; padding:18px;
+  border-radius:22px;
+  background:rgba(10,15,30,.65);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(0,255,255,.4);
+  box-shadow:0 0 28px rgba(0,255,255,.4);
+  color:#e5faff;
+  z-index:9999;
+  touch-action:none;
+}
+#elitePanel::before{
+  content:""; position:absolute; inset:-2px;
+  border-radius:24px;
+  background:linear-gradient(120deg,#00ffe7,#0066ff,#00ffe7);
+  z-index:-1;
+  animation:hue 4s linear infinite;
+}
+@keyframes hue{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+
+.title{text-align:center; font-size:13px; color:#00ffe7; margin-bottom:10px; letter-spacing:2px}
+
+/* LOGIN */
+#login input{
+  width:100%; padding:10px; border-radius:14px; text-align:center;
+  background:#000; color:#0ff; border:1px solid #0ff;
+}
+#login button{
+  width:100%; margin-top:10px; padding:10px; border-radius:14px; border:none;
+  background:linear-gradient(135deg,#00ffe7,#0066ff); font-weight:bold; cursor:pointer;
+}
+
+/* SIGNAL */
+#signalBox{display:none; text-align:center;}
+#signalText{
+  font-size:40px; font-weight:bold; margin:12px 0;
+  text-shadow:0 0 14px rgba(0,255,0,.8);
+  animation:pulse 1s ease-in-out infinite alternate;
+}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.15)}}
+
+#timer{font-size:12px; color:#93c5fd; margin-top:4px}
+.elite-links{margin-top:10px; font-size:12px;}
+.elite-links a{color:#38bdf8; text-decoration:none; display:block; margin:3px 0;}
+
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div id="elitePanel">
+  <!-- LOGIN -->
+  <div id="login">
+    <div class="title">OWNER YEASIN AI</div>
+    <input type="password" id="pass" placeholder="ENTER PASSWORD">
+    <button onclick="login()">ACCESS PANEL</button>
+  </div>
+
+  <!-- SIGNAL -->
+  <div id="signalBox">
+    <div class="title">OWNER YEASIN AI</div>
+    <div id="signalText">BIG</div>
+    <div id="timer">30s</div>
+    <div class="elite-links">
+      <a href="https://www.amarclub1.com/register?invitationCode=164661219614" target="_blank">🔗 Club Registration</a>
+      <a href="https://t.me/bestsignalgroupbd" target="_blank">🔗 Telegram Channel</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* PASSWORD */
+const PASSWORD="112233";
+function login(){
+  if(pass.value===PASSWORD){
+    login.style.display="none";
+    signalBox.style.display="block";
+  }
+}
+
+/* SIGNAL LOGIC */
+let lastCycle=-1;
+function pickSignal(){
+  return Math.random()<0.5 ? "BIG" : "SMALL";
+}
+function tick(){
+  const now=new Date();
+  const sec=now.getSeconds();
+  const remain=30-(sec%30);
+  timer.textContent=remain+"s";
+
+  const cycle=Math.floor(sec/30);
+  if(cycle!==lastCycle){
+    lastCycle=cycle;
+    const signal=pickSignal();
+    signalText.textContent=signal;
+    if(signal==="BIG"){
+      signalText.style.color="#2dff66"; // green
+      signalText.style.textShadow="0 0 14px rgba(45,255,102,.9)";
+    } else {
+      signalText.style.color="#ff4d4d"; // red
+      signalText.style.textShadow="0 0 14px rgba(255,77,77,.9)";
+    }
+  }
+}
+setInterval(tick,1000);
+tick();
+
+/* DRAG */
+let drag=false,sx=0,sy=0,x=0,y=0;
+elitePanel.addEventListener("pointerdown",e=>{
+  drag=true;
+  elitePanel.setPointerCapture(e.pointerId);
+  sx=e.clientX-x; sy=e.clientY-y;
+});
+elitePanel.addEventListener("pointermove",e=>{
+  if(!drag)return;
+  x=e.clientX-sx; y=e.clientY-sy;
+  elitePanel.style.transform=`translate(${x}px,${y}px)`;
+});
+elitePanel.addEventListener("pointerup",()=>drag=false);
+</script>
+</body>
+</html>
